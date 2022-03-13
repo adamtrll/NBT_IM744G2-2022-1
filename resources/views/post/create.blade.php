@@ -6,35 +6,42 @@
         <div class="card">
             <div class="card-body">
                 <h3 class="display-3">{{ __('Publish') }}</h3>
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        @foreach ($errors->all() as $error)
-                        <p>{{ $error }}</p>
-                        @endforeach
-                    </div>
-                @endif
                 <form action="{{ route('post.create') }}" method="POST">
                     @csrf
                     <div class="mb-3">
                         <label for="title">{{ __('Title') }}</label>
-                        <input class="form-control" type="text" name="title">
+                        <input class="form-control{{ $errors->has('title') ? ' is-invalid' : '' }}" type="text" name="title" value="{{ old('title') }}">
+                        @if ($errors->has('title'))
+                            <p class="invalid-feedback">{{ $errors->first('title') }}</p>
+                        @endif
                     </div>
                     <div class="mb-3">
                         <label for="topic_id">{{ __('Topic') }}</label>
-                        <select class="form-control" name="topic_id">
+                        <select class="form-control{{ $errors->has('topic_id') ? ' is-invalid' : '' }}" name="topic_id">
                             <option value="">{{ __('Please choose') }}</option>
                             @foreach($topics as $topic)
-                                <option value="{{ $topic->id }}">{{ $topic->title }}</option>
+                                <option value="{{ $topic->id }}" {{ old('topic_id') == $topic->id ? 'selected' : '' }}>
+                                    {{ $topic->title }}
+                                </option>
                             @endforeach
                         </select>
+                        @if ($errors->has('topic_id'))
+                            <p class="invalid-feedback">{{ $errors->first('topic_id') }}</p>
+                        @endif
                     </div>
                     <div class="mb-3">
                         <label for="description">{{ __('Description') }}</label>
-                        <textarea class="form-control" name="description"></textarea>
+                        <textarea class="form-control{{ $errors->has('description') ? ' is-invalid' : '' }}" name="description">{{ old('description') }}</textarea>
+                        @if ($errors->has('description'))
+                            <p class="invalid-feedback">{{ $errors->first('description') }}</p>
+                        @endif
                     </div>
                     <div class="mb-3">
                         <label for="content">{{ __('Content') }}</label>
-                        <textarea class="form-control" name="content"></textarea>
+                        <textarea class="form-control{{ $errors->has('content') ? ' is-invalid' : '' }}" name="content">{{ old('content') }}</textarea>
+                        @if ($errors->has('content'))
+                            <p class="invalid-feedback">{{ $errors->first('content') }}</p>
+                        @endif
                     </div>
                     <div class="d-grid">
                         <button class="btn btn-primary btn-lg">Publish</button>

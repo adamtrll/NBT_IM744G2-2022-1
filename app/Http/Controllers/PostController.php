@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Post;
 use App\Models\Topic;
 use Illuminate\Http\Request;
@@ -45,7 +46,14 @@ class PostController extends Controller
             'content' => 'required',
         ]);
 
-        dd($request->all());
+        // todo replace this with the authenticated user
+        $user = User::first();
+
+        $post = $user->posts()->create($request->except('_token'));
+
+        return redirect()
+            ->route('post.details', $post)
+            ->with('success', __('Post published successfully'));
     }
 
     /**
@@ -56,7 +64,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        return view('post.show')->with(compact('post'));
     }
 
     /**

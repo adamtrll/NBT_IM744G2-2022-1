@@ -42,6 +42,7 @@
     @include('layouts._header')
 
     <main class="container py-4">
+        @include('layouts._alerts')
         @yield('content')
     </main>
 
