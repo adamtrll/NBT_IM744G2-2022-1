@@ -5,6 +5,6 @@
 <p>{{ $post->author->name }} | {{ $post->topic->title }} | {{ $post->created_at->diffForHumans() }}</p>
 <p class="fw-bold">{{ $post->description }}</p>
 <div>
-    {{ $post->content }}
+    {!! $post->content !!}
 </div>
 @endsection
