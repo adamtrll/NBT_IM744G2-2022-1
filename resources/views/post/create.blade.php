@@ -12,32 +12,21 @@
 @endpush
 
 @section('content')
-<div class="row">
-    <div class="col-lg-6 col-md-10 mx-auto">
-        <div class="card">
-            <div class="card-body">
-                <h3 class="display-3">{{ __('Publish') }}</h3>
-                <form action="{{ route('post.create') }}" method="POST">
-                    @csrf
+<form action="{{ route('post.create') }}" method="POST" enctype="multipart/form-data">
+    @csrf
+    <div class="d-flex align-items-center mb-3">
+        <h3 class="display-3">{{ __('Publish') }}</h3>
+        <button class="ms-auto btn btn-primary">Publish</button>
+    </div>
+    <div class="row">
+        <div class="col-lg-8 col-md-6">
+            <div class="card">
+                <div class="card-body">
                     <div class="mb-3">
                         <label for="title">{{ __('Title') }}</label>
                         <input class="form-control{{ $errors->has('title') ? ' is-invalid' : '' }}" type="text" name="title" value="{{ old('title') }}">
                         @if ($errors->has('title'))
                             <p class="invalid-feedback">{{ $errors->first('title') }}</p>
-                        @endif
-                    </div>
-                    <div class="mb-3">
-                        <label for="topic_id">{{ __('Topic') }}</label>
-                        <select class="form-control{{ $errors->has('topic_id') ? ' is-invalid' : '' }}" name="topic_id">
-                            <option value="">{{ __('Please choose') }}</option>
-                            @foreach($topics as $topic)
-                                <option value="{{ $topic->id }}" {{ old('topic_id') == $topic->id ? 'selected' : '' }}>
-                                    {{ $topic->title }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @if ($errors->has('topic_id'))
-                            <p class="invalid-feedback">{{ $errors->first('topic_id') }}</p>
                         @endif
                     </div>
                     <div class="mb-3">
@@ -54,12 +43,36 @@
                             <p class="invalid-feedback">{{ $errors->first('content') }}</p>
                         @endif
                     </div>
-                    <div class="d-grid">
-                        <button class="btn btn-primary btn-lg">Publish</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="topic_id">{{ __('Topic') }}</label>
+                        <select class="form-control{{ $errors->has('topic_id') ? ' is-invalid' : '' }}" name="topic_id">
+                            <option value="">{{ __('Please choose') }}</option>
+                            @foreach($topics as $topic)
+                                <option value="{{ $topic->id }}" {{ old('topic_id') == $topic->id ? 'selected' : '' }}>
+                                    {{ $topic->title }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @if ($errors->has('topic_id'))
+                            <p class="invalid-feedback">{{ $errors->first('topic_id') }}</p>
+                        @endif
                     </div>
-                </form>
+                    <div class="mb-3">
+                        <label for="cover">{{ __('Cover image') }}</label>
+                        <input class="form-control{{ $errors->has('cover') ? ' is-invalid' : '' }}" type="file" name="cover" value="{{ old('cover') }}">
+                        @if ($errors->has('cover'))
+                            <p class="invalid-feedback">{{ $errors->first('cover') }}</p>
+                        @endif
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</form>
 @endsection

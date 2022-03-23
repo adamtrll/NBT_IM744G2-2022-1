@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Image;
 use App\Models\User;
 use App\Models\Post;
 use App\Models\Topic;
@@ -44,12 +45,20 @@ class PostController extends Controller
             'topic_id' => 'required|exists:topics,id',
             'description' => 'required',
             'content' => 'required',
+            'cover' => 'file|image',
         ]);
 
         // todo replace this with the authenticated user
         $user = User::first();
 
         $post = $user->posts()->create($request->except('_token'));
+
+        $image = $this->uploadImage($request);
+
+        if ($image) {
+            $post->cover = $image->basename;
+            $post->save();
+        }
 
         return redirect()
             ->route('post.details', $post)
@@ -99,5 +108,16 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         //
+    }
+
+    private function uploadImage(Request $request)
+    {
+        $file = $request->file('cover');
+
+        $fileName = uniqid();
+
+        $cover = Image::make($file)->save(public_path("uploads/posts/{$fileName}.{$file->extension()}"));
+
+        return $cover;
     }
 }
