@@ -22,13 +22,7 @@
         <div class="col-lg-8 col-md-6">
             <div class="card">
                 <div class="card-body">
-                    <div class="mb-3">
-                        <label for="title">{{ __('Title') }}</label>
-                        <input class="form-control{{ $errors->has('title') ? ' is-invalid' : '' }}" type="text" name="title" value="{{ old('title') }}">
-                        @if ($errors->has('title'))
-                            <p class="invalid-feedback">{{ $errors->first('title') }}</p>
-                        @endif
-                    </div>
+                    <x-forms.input name="title" label="{{ __('Title') }}" />
                     <div class="mb-3">
                         <label for="description">{{ __('Description') }}</label>
                         <textarea class="form-control{{ $errors->has('description') ? ' is-invalid' : '' }}" name="description">{{ old('description') }}</textarea>
