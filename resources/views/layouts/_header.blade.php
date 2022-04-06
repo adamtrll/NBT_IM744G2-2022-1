@@ -19,7 +19,39 @@
                         <path d="M21 21l-5.2-5.2" />
                     </svg>
                 </a>
-                <a class="btn btn-sm btn-outline-secondary" href="#">Sign up</a>
+                @auth
+                    <a class="btn btn-sm btn-primary" href="{{ route('post.create') }}">
+                        {{ __('Publish') }}
+                    </a>
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img class="rounded-circle me-2" width="25" src="{{ Auth::user()->avatar }}" />
+                            {{ Auth::user()->name }}
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    {{ __('Profile') }}
+                                </a>
+                            </li>
+                            <li>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button class="dropdown-item" type="submit">
+                                        {{ __('Sign out') }}
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                      </div>
+                @else
+                    <a class="btn btn-sm btn-outline-secondary" href="{{ route('login') }}">
+                        {{ __('Sign in') }}
+                    </a>
+                    <a class="btn btn-sm btn-success ms-2" href="{{ route('register') }}">
+                        {{ __('Sign up') }}
+                    </a>
+                @endauth
             </div>
         </div>
     </header>
