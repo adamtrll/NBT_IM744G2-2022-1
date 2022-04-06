@@ -22,3 +22,5 @@ Route::get('/publish', [Controllers\PostController::class, 'create'])->name('pos
 Route::post('/publish', [Controllers\PostController::class, 'store']);
 
 Route::get('/post/{post}', [Controllers\PostController::class, 'show'])->name('post.details');
+
+require __DIR__ . '/auth.php';
