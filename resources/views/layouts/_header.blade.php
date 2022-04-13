@@ -59,7 +59,7 @@
     <div class="nav-scroller py-1 mb-2">
         <nav class="nav d-flex justify-content-between">
             @foreach ($topics as $topic)
-                <a class="p-2 link-secondary" href="#">
+                <a class="p-2 link-secondary" href="{{ route('topic.show', $topic) }}">
                     {{ $topic->title }}
                 </a>
             @endforeach

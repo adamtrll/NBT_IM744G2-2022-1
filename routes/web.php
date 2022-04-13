@@ -28,4 +28,8 @@ Route::middleware(['auth'])->group(function () {
 
 Route::get('/post/{post}', [Controllers\PostController::class, 'show'])->name('post.details');
 
+Route::get('/topic/{topic}', [Controllers\TopicController::class, 'show'])->name('topic.show');
+
+Route::get('/profile/{user}', [Controllers\ProfileController::class, 'show'])->name('profile.show');
+
 require __DIR__ . '/auth.php';
