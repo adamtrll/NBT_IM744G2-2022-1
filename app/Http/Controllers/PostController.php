@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Image;
+use Auth;
 use App\Models\User;
 use App\Models\Post;
 use App\Models\Topic;
@@ -41,10 +42,7 @@ class PostController extends Controller
      */
     public function store(PostRequest $request)
     {
-        // todo replace this with the authenticated user
-        $user = User::first();
-
-        $post = $user->posts()->create($request->except('_token'));
+        $post = Auth::user()->posts()->create($request->except('_token'));
 
         $image = $this->uploadImage($request);
 
@@ -77,7 +75,13 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        if ($post->author != Auth::user()) {
+            return abort(403);
+        }
+
+        $topics = Topic::orderBy('title')->get();
+
+        return view('post.edit')->with(compact('post', 'topics'));
     }
 
     /**
@@ -89,7 +93,26 @@ class PostController extends Controller
      */
     public function update(PostRequest $request, Post $post)
     {
-        //
+        if ($post->author != Auth::user()) {
+            return abort(403);
+        }
+
+        $post->update($request->except('_token'));
+
+        $image = $this->uploadImage($request);
+
+        if ($image) {
+            if ($post->cover) {
+                // todo delete previous cover image from server
+            }
+
+            $post->cover = $image->basename;
+            $post->save();
+        }
+
+        return redirect()
+            ->route('post.edit', $post)
+            ->with('success', __('Post updated successfully'));
     }
 
     /**
@@ -106,6 +129,10 @@ class PostController extends Controller
     private function uploadImage(Request $request)
     {
         $file = $request->file('cover');
+
+        if (!$file) {
+            return;
+        }
 
         $fileName = uniqid();
 
