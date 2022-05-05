@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Image;
 use Auth;
 use App\Models\User;
+use App\Models\Comment;
 use App\Models\Post;
 use App\Models\Topic;
 use Illuminate\Http\Request;
@@ -124,6 +125,24 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         //
+    }
+
+    public function comment(Post $post, Request $request)
+    {
+        $request->validate([
+            'comment' => 'required|min:10',
+        ]);
+
+        $comment = new Comment;
+        $comment->message = $request->comment;
+        $comment->user()->associate($request->user());
+
+        $post->comments()->save($comment);
+
+        $url = route('post.details', $post) . "#comment-{$comment->id}";
+
+        return redirect($url)
+            ->with('success', __('Comment saved successfully'));
     }
 
     private function uploadImage(Request $request)
