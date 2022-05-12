@@ -13,6 +13,11 @@ use App\Http\Requests\PostRequest;
 
 class PostController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Post::class, 'post');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -76,10 +81,6 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        if ($post->author != Auth::user()) {
-            return abort(403);
-        }
-
         $topics = Topic::orderBy('title')->get();
 
         return view('post.edit')->with(compact('post', 'topics'));
@@ -94,10 +95,6 @@ class PostController extends Controller
      */
     public function update(PostRequest $request, Post $post)
     {
-        if ($post->author != Auth::user()) {
-            return abort(403);
-        }
-
         $post->update($request->except('_token'));
 
         $image = $this->uploadImage($request);
@@ -158,5 +155,15 @@ class PostController extends Controller
         $cover = Image::make($file)->save(public_path("uploads/posts/{$fileName}.{$file->extension()}"));
 
         return $cover;
+    }
+
+    protected function resourceAbilityMap()
+    {
+        $abilityMap = parent::resourceAbilityMap();
+
+        $abilityMap['comment'] = 'create';
+        // $abilityMap['deleteCover'] = 'update';
+
+        return $abilityMap;
     }
 }

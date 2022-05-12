@@ -24,6 +24,11 @@
                     {{ $post->description }}
                 </p>
                 <div class="text-end">
+                    @can('update', $post)
+                        <a class="btn btn-sm btn-secondary" href="{{ route('post.edit', $post)}}">
+                            Edit
+                        </a>
+                    @endcan
                     <a class="btn btn-sm btn-primary" href="{{ route('post.details', $post)}}">
                         Read more
                     </a>

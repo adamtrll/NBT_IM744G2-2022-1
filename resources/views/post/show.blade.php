@@ -3,6 +3,13 @@
 @section('content')
 <h1 class="display-1">{{ $post->title }}</h1>
 <p>{{ $post->author->name }} | {{ $post->topic->title }} | {{ $post->created_at->diffForHumans() }}</p>
+<div class="mb-3">
+    @can('update', $post)
+        <a class="btn btn-sm btn-secondary" href="{{ route('post.edit', $post)}}">
+            Edit
+        </a>
+    @endcan
+</div>
 <p class="fw-bold">{{ $post->description }}</p>
 <div>
     {!! $post->content !!}
@@ -12,17 +19,25 @@
         <h5 class="display-5">
             {{ __('Comments') }}
         </h5>
-        <form action="{{ route('post.comment', $post) }}" method="POST">
-            @csrf
-            <div class="mb-3">
-                <textarea class="form-control" name="comment"></textarea>
-            </div>
-            <div class="d-grid">
-                <button class="btn btn-primary">
-                    {{ __('Comment') }}
-                </button>
-            </div>
-        </form>
+        @auth
+            <form action="{{ route('post.comment', $post) }}" method="POST">
+                @csrf
+                <div class="mb-3">
+                    <textarea class="form-control" name="comment"></textarea>
+                </div>
+                <div class="d-grid">
+                    <button class="btn btn-primary">
+                        {{ __('Comment') }}
+                    </button>
+                </div>
+            </form>
+        @else
+        <div class="d-grid">
+            <a class="btn btn-primary" href="{{ route('login') }}">
+                Log in to comment
+            </a>
+        </div>
+        @endif
         <div class="mt-5">
             @foreach($post->comments as $comment)
                 <div class="card mb-3" id="comment-{{$comment->id}}">
